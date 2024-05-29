@@ -3,19 +3,19 @@ A stack based language which developt with c.
 
 ## Usage
 ```
-ctack main.ctk 
+ctack main.ctk
 ```
 
 ## Operands
-push
-pop
-+
--
-*
-/
-pick
-print
-dump
+- `push`
+- `pop`
+- `peek`
+- `+`
+- `-`
+- `*`
+- `/`
+- `print`
+- `dump`
 
 
 ## License
