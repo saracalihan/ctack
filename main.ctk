@@ -2,7 +2,6 @@ push 10
 push 20
 push 20
 push 20
-// comment
 push 20
 +
 print
