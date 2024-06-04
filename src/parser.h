@@ -42,7 +42,7 @@ ExecutationStack parse(Tokens* tokens){
                     printf("Push operation can not use with %i\n", next_token.type);
                     exit(1);
                 }
-                stack_type data = atoi(next_token.value); // convert data from string
+                stack_type data = variant_create_int(atoi(next_token.value)); // convert data from string
                 memcpy(n.data, &data, sizeof(stack_type));
             break;
             case TOKEN_POP:

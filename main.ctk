@@ -4,8 +4,10 @@ push 20
 push 20
 push 20
 +
-print
+dump
 push 15
--
 print
+-
+dump
+*
 dump

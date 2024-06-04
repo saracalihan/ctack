@@ -29,7 +29,7 @@ Token token_create(const char* str){
         token.type = TOKEN_PUSH;
     } else if (strncmp(str, "pop", 3) == 0) {
         token.type = TOKEN_POP;
-    } else if (strncmp(str, "PEEK", 3) == 0) {
+    } else if (strncmp(str, "peek", 3) == 0) {
         token.type = TOKEN_POP;
     }else if (strncmp(str, "+", 3) == 0) {
         token.type = TOKEN_ADD;
