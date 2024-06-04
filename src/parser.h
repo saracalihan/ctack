@@ -39,10 +39,26 @@ ExecutationStack parse(Tokens* tokens){
                 n.data = malloc(sizeof(stack_type));
                 Token next_token = DA_SHIFT(*tokens);
                 if(next_token.type != TOKEN_DATA){
-                    printf("Push operation can not use with %i\n", next_token.type);
+                    printf("[PARSE ERROR]Push operation can not use with %i typed enum\n", next_token.type);
                     exit(1);
                 }
-                stack_type data = atoi(next_token.value); // convert data from string
+                stack_type data;
+
+                if(isdigit((next_token.value[0]))){ // intager
+                    data = variant_create_int(atoi(next_token.value));
+                } else if(next_token.value[0] =='"'){ // string
+                    // remove "" chars
+                    char* str = strdup(next_token.value+1);
+                    str[strlen(str) -1] = '\0'; 
+                    data = variant_create_string(str);
+                } else if( strcmp(next_token.value, "true") == 0 || strcmp(next_token.value, "false") == 0  ){ // boolean
+                    data = variant_create_bool(strcmp(next_token.value, "true") == 0);
+                } else if( strcmp(next_token.value, "null") == 0){
+                    data = variant_create_null(1);
+                } else {
+                    CTACK_ERROR("[PARSER ERROR] Unexpected data type!\nValue: '%s'\n", next_token.value);
+                    exit(1);
+                }
                 memcpy(n.data, &data, sizeof(stack_type));
             break;
             case TOKEN_POP:

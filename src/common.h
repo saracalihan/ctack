@@ -1,10 +1,12 @@
+#define CTACK_ERROR printf
+#define STACK_SIZE 10
 #ifndef COMMON_H
 #define COMMON_H
 
-#define STACK_SIZE 10
-#define CTACK_ERROR printf
+#include "variant.h"
 
-typedef int stack_type;
+typedef Variant stack_type;
+
 
 typedef enum{
     TOKEN_UNKNOWN,
@@ -46,7 +48,7 @@ typedef enum{
 
 typedef struct{
     NodeType type;
-    void *data;
+    void *data; // variable data or func paramaters and body... 
 } Node;
 
 typedef struct{

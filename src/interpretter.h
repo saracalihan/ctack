@@ -1,5 +1,6 @@
 #include "common.h"
 #include "stack.h"
+#include "variant.h"
 
 int interpret(ExecutationStack* es){
     Stack stack = stack_create();
@@ -20,33 +21,31 @@ int interpret(ExecutationStack* es){
             case NODE_ADD:
                 b = stack_pop(&stack);
                 a = stack_pop(&stack);
-                stack_push(&stack, a + b);
+                stack_push(&stack, variant_add(a, b));
                 break;
             case NODE_SUB:
                 b = stack_pop(&stack);
                 a = stack_pop(&stack);
-                stack_push(&stack, a - b);
+                stack_push(&stack, variant_sub(a, b));
                 break;
             case NODE_MULT:
                 b = stack_pop(&stack);
                 a = stack_pop(&stack);
-                stack_push(&stack, a * b);
+                stack_push(&stack, variant_mult(a, b));
                 break;
             case NODE_DIV:
                 b = stack_pop(&stack);
                 a = stack_pop(&stack);
-                stack_push(&stack, a / b);
+                stack_push(&stack, variant_div(a, b));
                 break;
             case NODE_PRINT:
                 stack_type data = stack_peek(&stack);
-                printf("%i\n", data);
+                printf("%s\n", variant_to_string(&data));
                 break;
             case NODE_DUMP:
                 printf("Stack(%i):\n", stack.top +1 );
                 for(int i=0;i<= stack.top; i++){
-                    char str[256]={0};
-                    sprintf(str, "%i", stack.items[i]); // for variant translation
-                    printf("| %s ", str);
+                    printf("| %s ", variant_to_string(&stack.items[i]));
                 }
                 printf("\n");
                 break;

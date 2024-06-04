@@ -29,7 +29,7 @@ Token token_create(const char* str){
         token.type = TOKEN_PUSH;
     } else if (strncmp(str, "pop", 3) == 0) {
         token.type = TOKEN_POP;
-    } else if (strncmp(str, "PEEK", 3) == 0) {
+    } else if (strncmp(str, "peek", 3) == 0) {
         token.type = TOKEN_POP;
     }else if (strncmp(str, "+", 3) == 0) {
         token.type = TOKEN_ADD;
@@ -54,24 +54,51 @@ Tokens tokenize_string(const char* code){
     Tokens tokens = tokens_create();
 
     const char* p = code;
+    bool is_string = false;
     while (*p) {
-        // Skip spaces and newlines
-       while (*p && isspace(*p)) {
-           p++;
-       }
+        // Skip spaces and newlines if not inside a string
+        if (!is_string) {
+            while (*p && isspace(*p)) {
+                p++;
+            }
+        }
 
-       if (*p) {
-           const char *start = p;
-           while (*p && (!isspace(*p))) {
-               p++;
-           }
+        if (*p) {
+            const char *start = p;
 
-           int length = p - start;
-           char command[length+1];
-           memset(&command, 0, sizeof(char)*(length+1));
-           strncpy(&command, start, length);
-           DA_PUSH(tokens, token_create(command));
-       }
+            // Handle string literals
+            if (*p == '"') {
+                is_string = !is_string;
+                p++; // Skip the opening quote
+                start = p;
+
+                while (*p && (*p != '"' || (*(p-1) == '\\' && is_string))) {
+                    p++;
+                }
+
+                if (*p == '"') {
+                    is_string = !is_string;
+                    int length = p - start;
+                    char command[length + 3]; // 2 " and null char
+                    memset(&command, 0, sizeof(char) * (length + 3));
+                    command[0] = '"';
+                    strncpy(command+1, start, length);
+                    command[length+1] = '"';
+                    DA_PUSH(tokens, token_create(command));
+                    p++; // Skip the closing quote
+                }
+            } else {
+                while (*p && (!isspace(*p) || is_string)) {
+                    p++;
+                }
+
+                int length = p - start;
+                char command[length + 1];
+                memset(&command, 0, sizeof(char) * (length + 1));
+                strncpy(command, start, length);
+                DA_PUSH(tokens, token_create(command));
+            }
+        }
     }
 
     return tokens;
