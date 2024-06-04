@@ -48,7 +48,7 @@ typedef enum{
 
 typedef struct{
     NodeType type;
-    void *data;
+    void *data; // variable data or func paramaters and body... 
 } Node;
 
 typedef struct{

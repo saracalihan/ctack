@@ -1,13 +1,10 @@
 push 10
-push 20
-push 20
-push 20
-push 20
-+
+push "alihan"
+push true
+push null
+push false
 dump
-push 15
-print
--
-dump
-*
+push 10
+push 20
+push "aalihan sarac"
 dump
