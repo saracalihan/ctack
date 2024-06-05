@@ -2,9 +2,7 @@ push 10
 push "alihan"
 push true
 push null
+push -1
 push false
-dump
-push 10
-push 20
-push "aalihan sarac"
+==
 dump

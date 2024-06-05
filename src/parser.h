@@ -13,7 +13,14 @@ Node node_create(NodeType type){
 
 void executation_stack_free(ExecutationStack* es){
     for(size_t i=0; i< es->count; i++){
-        if(es->items[i].data != NULL){
+        if(
+            es->items[i].data != NULL
+            && 
+            (
+                es->items[i].type != NODE_ARITHMETIC_OPS &&
+                es->items[i].type != NODE_LOGIC_OPS
+            )
+        ){
             free(es->items[i].data);
         }
     }
@@ -44,7 +51,7 @@ ExecutationStack parse(Tokens* tokens){
                 }
                 stack_type data;
 
-                if(isdigit((next_token.value[0]))){ // intager
+                if(isdigit(next_token.value[0]) || (next_token.value[0] == '-' && isdigit(next_token.value[1])) ){ // intager
                     data = variant_create_int(atoi(next_token.value));
                 } else if(next_token.value[0] =='"'){ // string
                     // remove "" chars
@@ -68,16 +75,23 @@ ExecutationStack parse(Tokens* tokens){
                 n = node_create(NODE_PEEK);
             break;
             case TOKEN_ADD:
-                n = node_create(NODE_ADD);
-            break;
             case TOKEN_SUB:
-                n = node_create(NODE_SUB);
-            break;
             case TOKEN_DIV:
-                n = node_create(NODE_DIV);
-            break;
             case TOKEN_MULT:
-                n = node_create(NODE_MULT);
+                n = node_create(NODE_ARITHMETIC_OPS);
+                n.data = (void *)t.type;
+            break;
+            case TOKEN_LOGIC_AND:
+            case TOKEN_LOGIC_OR:
+            case TOKEN_LOGIC_NOT:
+            case TOKEN_LOGIC_EQ:
+            case TOKEN_LOGIC_NOT_EQ:
+            case TOKEN_LOGIC_GT:
+            case TOKEN_LOGIC_GTE:
+            case TOKEN_LOGIC_LT:
+            case TOKEN_LOGIC_LTE:
+              n = node_create(NODE_LOGIC_OPS);
+                n.data = (void *)t.type;
             break;
             case TOKEN_PRINT:
                 n = node_create(NODE_PRINT);
