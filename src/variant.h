@@ -54,12 +54,11 @@ Variant variant_create_null(bool d){
 
 char* variant_to_string(const Variant* v){
     char str[256] = {0};
-    if(v->type == TYPE_STRING){
-        return v->string_value;
-    }
 
     switch (v->type){
-
+        case TYPE_STRING:
+            return v->string_value;
+        break;
         case TYPE_BOOL:
             strcpy(str, v->bool_value ? "true" : "false");
             break;
@@ -282,7 +281,7 @@ bool variant_not(const Variant a){
     return !variant_is_truthy(a);
 }
 bool variant_eq(const Variant a, const Variant b){
-    if((a.type == TYPE_INT && b.type == TYPE_BOOL) || a.type == TYPE_BOOL && b.type == TYPE_INT){ // int can use like bool
+    if((a.type == TYPE_INT && b.type == TYPE_BOOL) || (a.type == TYPE_BOOL && b.type == TYPE_INT)){ // int can use like bool
         return variant_is_truthy(a) == variant_is_truthy(b);
     }
     if(a.type != b.type){
@@ -297,7 +296,7 @@ bool variant_eq(const Variant a, const Variant b){
     return a.string_value == b.string_value;
 }
 bool variant_not_eq(const Variant a, const Variant b){
-    if((a.type == TYPE_INT && b.type == TYPE_BOOL) || a.type == TYPE_BOOL && b.type == TYPE_INT){ // int can use like bool
+    if((a.type == TYPE_INT && b.type == TYPE_BOOL) || (a.type == TYPE_BOOL && b.type == TYPE_INT)){ // int can use like bool
         return variant_is_truthy(a) != variant_is_truthy(b);
     }
     if(a.type != b.type){
