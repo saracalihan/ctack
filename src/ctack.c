@@ -26,7 +26,7 @@ int main( int argc, char** argv){
     fseek(input, 0, SEEK_SET);
 
     char input_str[file_size+1];
-    memset(&input_str, 0, file_size);
+    memset(&input_str, 0, file_size+1);
     if(fread(&input_str, 1, file_size, input) ==0){
         CTACK_ERROR("Can not read '%s'\n", argv[1]);
         exit(-1);

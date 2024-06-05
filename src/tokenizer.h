@@ -6,6 +6,43 @@
 #include "common.h"
 #include "da.h"
 
+bool is_integer(const char* str) {
+    if (*str == '-' || *str == '+') {
+        str++;
+    }
+    if (*str == '\0') {
+        return false;
+    }
+    while (*str) {
+        if (!isdigit(*str)) {
+            return false;
+        }
+        str++;
+    }
+    return true;
+}
+
+bool is_null(const char* str) {
+    return strcmp(str, "null") == 0;
+}
+
+bool is_boolean(const char* str) {
+    return strcmp(str, "true") == 0 || strcmp(str, "false") == 0;
+}
+
+bool is_string(const char* str) {
+    if (*str == '"') {
+        str++;
+        while (*str) {
+            if (*str == '"' && *(str - 1) != '\\') {
+                return *(str + 1) == '\0';
+            }
+            str++;
+        }
+    }
+    return false;
+}
+
 Tokens tokens_create(){
     Tokens t;
     memset(&t, 0, sizeof(Tokens));
@@ -62,8 +99,17 @@ Token token_create(const char* str){
     }else if (strncmp(str, ">", 1) == 0) {
         token.type = TOKEN_LOGIC_GT;
     } else {
+        if(!( // check data types
+            is_integer(str) ||
+            is_string(str)  ||
+            is_boolean(str) ||
+            is_null(str)
+        )){
+            CTACK_ERROR("[TOKENIZER ERROR] Invalid data value: '%s'\n", str);
+            exit(1);
+        }
         token.type = TOKEN_DATA;
-        sprintf(&token.value, "%s", str);
+        sprintf(token.value, "%s", str);
     }
     return token;
 }
