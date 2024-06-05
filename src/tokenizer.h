@@ -43,6 +43,24 @@ Token token_create(const char* str){
         token.type = TOKEN_MULT;
     } else if (strncmp(str, "dump", 5) == 0) {
         token.type = TOKEN_DUMP;
+    } else if (strncmp(str, "&&", 2) == 0) {
+        token.type = TOKEN_LOGIC_AND;
+    }else if (strncmp(str, "||", 2) == 0) {
+        token.type = TOKEN_LOGIC_OR;
+    }else if (strncmp(str, "==", 2) == 0) {
+        token.type = TOKEN_LOGIC_EQ;
+    }else if (strncmp(str, "!=", 2) == 0) {
+        token.type = TOKEN_LOGIC_NOT_EQ;
+    }else if (strncmp(str, ">=", 2) == 0) {
+        token.type = TOKEN_LOGIC_GTE;
+    }else if (strncmp(str, "<=", 2) == 0) {
+        token.type = TOKEN_LOGIC_LTE;
+    }else if (strncmp(str, "!", 1) == 0) {
+        token.type = TOKEN_LOGIC_NOT;
+    }else if (strncmp(str, "<", 1) == 0) {
+        token.type = TOKEN_LOGIC_LT;
+    }else if (strncmp(str, ">", 1) == 0) {
+        token.type = TOKEN_LOGIC_GT;
     } else {
         token.type = TOKEN_DATA;
         sprintf(&token.value, "%s", str);

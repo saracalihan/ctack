@@ -20,6 +20,15 @@ typedef enum{
     TOKEN_PRINT,
     TOKEN_DUMP,
     TOKEN_DATA,
+    TOKEN_LOGIC_AND,
+    TOKEN_LOGIC_OR,
+    TOKEN_LOGIC_GT,
+    TOKEN_LOGIC_LT,
+    TOKEN_LOGIC_GTE,
+    TOKEN_LOGIC_LTE,
+    TOKEN_LOGIC_NOT,
+    TOKEN_LOGIC_EQ,
+    TOKEN_LOGIC_NOT_EQ,
 }TokenTypes;
 
 typedef struct{
@@ -40,10 +49,8 @@ typedef enum{
     NODE_PEEK,
     NODE_PRINT,
     NODE_DUMP,
-    NODE_ADD,
-    NODE_SUB,
-    NODE_MULT,
-    NODE_DIV,
+    NODE_ARITHMETIC_OPS,
+    NODE_LOGIC_OPS,
 }NodeType;
 
 typedef struct{

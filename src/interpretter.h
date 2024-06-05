@@ -2,12 +2,32 @@
 #include "stack.h"
 #include "variant.h"
 
+typedef bool (*LOGICAL_FUNC_TWO_PARAMATER)(Variant, Variant);
+
 int interpret(ExecutationStack* es){
     Stack stack = stack_create();
     if(es->count == 0){
         return 1;
     }
+    Variant (*variant_arith_funcs[])(Variant, Variant) = {
+        [TOKEN_ADD] = &variant_add,
+        [TOKEN_SUB] = &variant_sub,
+        [TOKEN_DIV] = &variant_div,
+        [TOKEN_MULT] = &variant_mult,
+    };
+    LOGICAL_FUNC_TWO_PARAMATER not_func = (LOGICAL_FUNC_TWO_PARAMATER)variant_not;
+    bool (*variant_logic_funcs[])(Variant, Variant) = {
+        [TOKEN_LOGIC_AND] = &variant_and,
+        [TOKEN_LOGIC_OR] = &variant_or,
+        [TOKEN_LOGIC_GT] = &variant_gt,
+        [TOKEN_LOGIC_LT] = &variant_lt,
+        [TOKEN_LOGIC_GTE] = &variant_gte,
+        [TOKEN_LOGIC_LTE] = &variant_lte,
+        [TOKEN_LOGIC_NOT] = &not_func,
+        [TOKEN_LOGIC_EQ] = &variant_eq,
+        [TOKEN_LOGIC_NOT_EQ] = &variant_not_eq,
 
+    };
     while(es->top < es->count){
         Node* node = &es->items[es->top];
         stack_type a,b;
@@ -18,25 +38,16 @@ int interpret(ExecutationStack* es){
             case NODE_POP:
                 stack_pop(&stack);
                 break;
-            case NODE_ADD:
+            case NODE_ARITHMETIC_OPS:
                 b = stack_pop(&stack);
                 a = stack_pop(&stack);
-                stack_push(&stack, variant_add(a, b));
+                stack_push(&stack, variant_arith_funcs[(size_t)(TokenTypes*)node->data](a, b));
                 break;
-            case NODE_SUB:
+            case NODE_LOGIC_OPS:
                 b = stack_pop(&stack);
                 a = stack_pop(&stack);
-                stack_push(&stack, variant_sub(a, b));
-                break;
-            case NODE_MULT:
-                b = stack_pop(&stack);
-                a = stack_pop(&stack);
-                stack_push(&stack, variant_mult(a, b));
-                break;
-            case NODE_DIV:
-                b = stack_pop(&stack);
-                a = stack_pop(&stack);
-                stack_push(&stack, variant_div(a, b));
+                bool is_true = variant_logic_funcs[(size_t)(TokenTypes*)node->data](a, b);
+                stack_push(&stack, variant_create_bool(is_true));
                 break;
             case NODE_PRINT:
                 stack_type data = stack_peek(&stack);
