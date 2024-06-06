@@ -1,8 +1,14 @@
 push 10
-push "alihan"
-push true
-push null
-push -1
-push false
+"alihan"
+true
+null
+-1
+false
 ==
+if
+  "-1 is eq to false"
+else
+  "not eq"
+end
+print 
 dump

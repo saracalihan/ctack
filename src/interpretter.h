@@ -4,8 +4,7 @@
 
 typedef bool (*LOGICAL_FUNC_TWO_PARAMATER)(Variant, Variant);
 
-int interpret(ExecutationStack* es){
-    Stack stack = stack_create();
+int interpret(ExecutationStack* es, Stack* stack){
     if(es->count == 0){
         return 1;
     }
@@ -33,36 +32,46 @@ int interpret(ExecutationStack* es){
         stack_type a,b;
         switch(node->type){
             case NODE_PUSH:
-                stack_push(&stack, node_stack_data_convert(*node));
+                stack_push(stack, node_stack_data_convert(*node));
                 break;
             case NODE_POP:
-                stack_pop(&stack);
+                stack_pop(stack);
                 break;
             case NODE_ARITHMETIC_OPS:
-                b = stack_pop(&stack);
-                a = stack_pop(&stack);
-                stack_push(&stack, variant_arith_funcs[(size_t)(TokenTypes*)node->data](a, b));
+                b = stack_pop(stack);
+                a = stack_pop(stack);
+                stack_push(stack, variant_arith_funcs[(size_t)(TokenTypes*)node->data](a, b));
                 break;
             case NODE_LOGIC_OPS:
-                b = stack_pop(&stack);
-                a = stack_pop(&stack);
+                b = stack_pop(stack);
+                a = stack_pop(stack);
                 bool is_true = variant_logic_funcs[(size_t)(TokenTypes*)node->data](a, b);
-                stack_push(&stack, variant_create_bool(is_true));
+                stack_push(stack, variant_create_bool(is_true));
                 break;
             case NODE_PRINT:
-                stack_type data = stack_peek(&stack);
-                printf("%s\n", variant_to_string(&data));
+                {
+                    stack_type data = stack_peek(stack);
+                    printf("%s\n", variant_to_string(&data));
+                }
                 break;
             case NODE_DUMP:
-                printf("Stack(%i):\n", stack.top +1 );
-                for(int i=0;i<= stack.top; i++){
-                    printf("| %s ", variant_to_string(&stack.items[i]));
+                printf("Stack(%i):\n", stack->top +1 );
+                for(int i=0;i<= stack->top; i++){
+                    printf("| %s ", variant_to_string(&stack->items[i]));
                 }
                 printf("\n");
                 break;
+            case NODE_IF_STMT:
+                stack_type data = stack_pop(stack);
+                interpret(
+                    variant_is_truthy(data)
+                        ? &node->if_statement.consequent
+                        : &node->if_statement.alternate
+                    ,stack
+                );
+            break;
         }
         es->top++;
     }
-    stack_free(&stack);
-return 1;
+    return 1;
 }

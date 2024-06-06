@@ -6,9 +6,13 @@
 
 Node node_create(NodeType type){
     Node n;
+    memset(&n, 0, sizeof(n));
     n.type = type;
-    n.data = NULL;
 
+    if(type == NODE_IF_STMT){
+        DA_INIT(n.if_statement.consequent,1);
+        DA_INIT(n.if_statement.alternate,1);
+    }
     return n;
 }
 
@@ -55,9 +59,14 @@ stack_type data_to_variant(const Token* t){
 
 ExecutationStack parse(Tokens* tokens){
     ExecutationStack es = {0};
+    ExecutationStack* esp = &es; // its point es or temp for loop/statements nodes
+    // With esp, we dont need to recursive calls.
+    // When you need recursive call you can switch the stacks
+    // esp stack eklenmeli
+
     DA_INIT(es,1);
     if(tokens->count == 0){
-        return es;
+        return *esp;
     }
     while(tokens->count > 0){
         Node n = {0};
@@ -115,11 +124,29 @@ ExecutationStack parse(Tokens* tokens){
             case TOKEN_DUMP:
                 n = node_create(NODE_DUMP);
             break;
+            case TOKEN_IF:
+                    // DONT USE REFERANCE VALUES HERE
+                    DA_PUSH(*esp, node_create(NODE_IF_STMT));
+
+                    // switch the stack content
+                    // all nodes push into if's consequent stack 
+                    esp = &(DA_GET_LAST(*esp).if_statement.consequent);
+            continue; // go to firs step
+            case TOKEN_ELSE:
+                if(es.items[es.count-1].type != NODE_IF_STMT){
+                    CTACK_ERROR("[PARSE ERROR] Else must be has if keyword on before\n");
+                    exit(1);
+                }
+                esp = &(DA_GET_LAST(es).if_statement.alternate);
+            continue;
+            case TOKEN_END:
+                esp = &es;
+            continue;
         }
 
-        DA_PUSH(es, n);
+        DA_PUSH(*esp, n);
     }
-    return es;
+    return *esp;
 }
 
 #endif // PARSER_H

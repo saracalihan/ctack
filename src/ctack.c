@@ -35,7 +35,8 @@ int main( int argc, char** argv){
     Tokens tokens = tokenize_string(input_str);
     ExecutationStack es = parse(&tokens);
     tokens_free(&tokens);
-    int res = interpret(&es);
+    Stack stack = stack_create();
+    int res = interpret(&es, &stack);
     executation_stack_free(&es);
     return 0;
 }
