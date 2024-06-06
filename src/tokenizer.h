@@ -98,6 +98,12 @@ Token token_create(const char* str){
         token.type = TOKEN_LOGIC_LT;
     }else if (strncmp(str, ">", 1) == 0) {
         token.type = TOKEN_LOGIC_GT;
+    }else if (strncmp(str, "if", 2) == 0) {
+        token.type = TOKEN_IF;
+    }else if (strncmp(str, "else", 4) == 0) {
+        token.type = TOKEN_ELSE;
+    }else if (strncmp(str, "end", 3) == 0) {
+        token.type = TOKEN_END;
     } else {
         if(!( // check data types
             is_integer(str) ||

@@ -1,5 +1,8 @@
 #define CTACK_ERROR printf
 #define STACK_SIZE 10
+#define STACK_ERROR printf
+#define STACK_SIZE 10
+
 #ifndef COMMON_H
 #define COMMON_H
 
@@ -7,8 +10,7 @@
 
 typedef Variant stack_type;
 
-
-typedef enum{
+typedef enum {
     TOKEN_UNKNOWN,
     TOKEN_PUSH,
     TOKEN_POP,
@@ -29,20 +31,33 @@ typedef enum{
     TOKEN_LOGIC_NOT,
     TOKEN_LOGIC_EQ,
     TOKEN_LOGIC_NOT_EQ,
-}TokenTypes;
+    TOKEN_IF,
+    TOKEN_ELSE,
+    TOKEN_END,
+} TokenTypes;
 
-typedef struct{
+typedef struct {
     TokenTypes type;
     char value[64];
-}Token;
+} Token;
 
 typedef struct {
     Token *items;
     size_t count;
     size_t capacity;
-}Tokens;
+} Tokens;
 
-typedef enum{
+// Forward declaration of Node
+typedef struct Node Node;
+
+typedef struct ExecutationStack {
+    Node *items;
+    size_t count;
+    size_t capacity;
+    size_t top;
+} ExecutationStack;
+
+typedef enum {
     NODE_UNKNOWN,
     NODE_PUSH,
     NODE_POP,
@@ -51,22 +66,22 @@ typedef enum{
     NODE_DUMP,
     NODE_ARITHMETIC_OPS,
     NODE_LOGIC_OPS,
-}NodeType;
+    NODE_IF_STMT,
+} NodeType;
 
-typedef struct{
+struct Node {
     NodeType type;
-    void *data; // variable data or func paramaters and body... 
-} Node;
+    union {
+        void *data; // NODE_DATA
+        struct {    // NODE_IF_STMT
+            ExecutationStack consequent;
+            ExecutationStack alternate;
+        } if_statement;
+    };
+};
 
-typedef struct{
-    Node *items;
-    size_t count;
-    size_t capacity;
-    size_t top;
-}ExecutationStack;
-
-typedef struct{
-    stack_type* items;
+typedef struct {
+    stack_type *items;
     int top;
 } Stack;
 
