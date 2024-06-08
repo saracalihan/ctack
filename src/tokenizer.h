@@ -66,19 +66,21 @@ Token token_create(const char* str){
         token.type = TOKEN_PUSH;
     } else if (strncmp(str, "pop", 3) == 0) {
         token.type = TOKEN_POP;
-    } else if (strncmp(str, "peek", 3) == 0) {
-        token.type = TOKEN_POP;
-    }else if (strncmp(str, "+", 3) == 0) {
+    } else if (strncmp(str, "peek", 4) == 0) {
+        token.type = TOKEN_PEEK;
+    } else if (strncmp(str, "pick", 4) == 0) {
+        token.type = TOKEN_PICK;
+    } else if (strncmp(str, "+", 1) == 0) {
         token.type = TOKEN_ADD;
-    } else if (strncmp(str, "-", 3) == 0) {
+    } else if (strncmp(str, "-", 1) == 0) {
         token.type = TOKEN_SUB;
     } else if (strncmp(str, "print", 5) == 0) {
         token.type = TOKEN_PRINT;
-    } else if (strncmp(str, "/", 5) == 0) {
+    } else if (strncmp(str, "/", 1) == 0) {
         token.type = TOKEN_DIV;
-    } else if (strncmp(str, "*", 5) == 0) {
+    } else if (strncmp(str, "*", 1) == 0) {
         token.type = TOKEN_MULT;
-    } else if (strncmp(str, "dump", 5) == 0) {
+    } else if (strncmp(str, "dump", 4) == 0) {
         token.type = TOKEN_DUMP;
     } else if (strncmp(str, "&&", 2) == 0) {
         token.type = TOKEN_LOGIC_AND;

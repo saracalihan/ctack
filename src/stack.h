@@ -52,4 +52,17 @@ stack_type stack_peek(const Stack *s){
     return s->items[s->top];
 }
 
+stack_type stack_get(const Stack *s, size_t index){
+    if(stack_is_empty(*s)){
+        CTACK_ERROR("Stack is empty!");
+        exit(-1);
+    }
+    if(index < 0 || index > s->top){
+        CTACK_ERROR("Stack out of range! Stack size is %d given index is %zu.\n", s->top +1, index);
+        exit(-1);
+    }
+
+    return s->items[index];
+}
+
 #endif // STACK_H

@@ -49,6 +49,7 @@ ctack main.ctk
 | push    | Pushes a value onto the stack. `push` is optional keyword, you can use directly value | `push 5`, `5`          |
 | pop     | Removes the top value from the stack | `pop`             |
 | peek    | Peeks at the top value without popping it | `peek`         |
+| pick    | Get element from stack with index | `pick 2`         |
 
 ### Arithmetics
 
