@@ -37,6 +37,12 @@ int interpret(ExecutationStack* es, Stack* stack){
             case NODE_POP:
                 stack_pop(stack);
                 break;
+            case NODE_PEEK:
+                stack_push(stack, stack_peek(stack));
+                break;
+            case NODE_PICK:
+                stack_push(stack, stack_get(stack, *(size_t*)node->data));
+                break;
             case NODE_ARITHMETIC_OPS:
                 b = stack_pop(stack);
                 a = stack_pop(stack);

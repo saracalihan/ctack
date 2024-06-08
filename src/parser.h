@@ -73,7 +73,6 @@ ExecutationStack parse(Tokens* tokens){
     // its point es or temp for loop/statements nodes
     // With esp, we dont need to recursive calls.
     // When you need recursive call you can switch the stacks
-    // esp stack eklenmeli
 
     DA_INIT(es,1);
     if(tokens->count == 0){
@@ -94,14 +93,16 @@ ExecutationStack parse(Tokens* tokens){
             case TOKEN_PUSH:
                 n = node_create(NODE_PUSH);
                 n.data = malloc(sizeof(stack_type));
-                Token next_token = DA_SHIFT(*tokens);
-                if(next_token.type != TOKEN_DATA){
-                    printf("[PARSE ERROR]Push operation can not use with %i typed enum\n", next_token.type);
-                    exit(1);
-                }
                 {
-                    stack_type data = data_to_variant(&next_token);
-                    memcpy(n.data, &data, sizeof(stack_type));
+                    Token next_token = DA_SHIFT(*tokens);
+                    if(next_token.type != TOKEN_DATA){
+                        printf("[PARSE ERROR]Push operation can not use with %i typed enum\n", next_token.type);
+                        exit(1);
+                    }
+                    {
+                        stack_type data = data_to_variant(&next_token);
+                        memcpy(n.data, &data, sizeof(stack_type));
+                    }
                 }
             break;
             case TOKEN_POP:
@@ -109,6 +110,24 @@ ExecutationStack parse(Tokens* tokens){
             break;
             case TOKEN_PEEK:
                 n = node_create(NODE_PEEK);
+            break;
+            case TOKEN_PICK:
+                n = node_create(NODE_PICK);
+                n.data = malloc(sizeof(size_t));
+                {
+                    Token next_token = DA_SHIFT(*tokens);
+                    if(next_token.type != TOKEN_DATA){
+                        printf("[PARSE ERROR] Pick operation can not use with %i typed enum\n", next_token.type);
+                        exit(1);
+                    }
+                    int pick_index = atoi(next_token.value);
+                    if(pick_index <0){
+                        printf("[PARSE ERROR] Can not pick from stack index of %d\n", pick_index);
+                        exit(1);
+                    }
+                    size_t d = (size_t)pick_index;
+                    memcpy(n.data, &d, sizeof(d));
+                }
             break;
             case TOKEN_ADD:
             case TOKEN_SUB:
