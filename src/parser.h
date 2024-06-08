@@ -57,9 +57,20 @@ stack_type data_to_variant(const Token* t){
     return data;
 }
 
+typedef struct{
+  ExecutationStack **items;
+  size_t count;
+  size_t capacity;
+} ESScopes;
+
 ExecutationStack parse(Tokens* tokens){
     ExecutationStack es = {0};
-    ExecutationStack* esp = &es; // its point es or temp for loop/statements nodes
+    ESScopes scopes = {0};
+    DA_INIT(scopes, 1);
+
+    ExecutationStack* esp = &es;
+    DA_PUSH(scopes, esp);
+    // its point es or temp for loop/statements nodes
     // With esp, we dont need to recursive calls.
     // When you need recursive call you can switch the stacks
     // esp stack eklenmeli
@@ -127,25 +138,29 @@ ExecutationStack parse(Tokens* tokens){
             case TOKEN_IF:
                     // DONT USE REFERANCE VALUES HERE
                     DA_PUSH(*esp, node_create(NODE_IF_STMT));
+                    DA_PUSH(scopes, esp);
 
                     // switch the stack content
                     // all nodes push into if's consequent stack 
                     esp = &(DA_GET_LAST(*esp).if_statement.consequent);
-            continue; // go to firs step
+                        continue; // go to firs step
             case TOKEN_ELSE:
-                if(es.items[es.count-1].type != NODE_IF_STMT){
+                Node* if_node =  &DA_GET_LAST(*DA_GET_LAST(scopes));
+                if(if_node->type != NODE_IF_STMT){
                     CTACK_ERROR("[PARSE ERROR] Else must be has if keyword on before\n");
                     exit(1);
                 }
-                esp = &(DA_GET_LAST(es).if_statement.alternate);
+                esp = &(if_node->if_statement.alternate);
             continue;
             case TOKEN_END:
-                esp = &es;
+                esp = DA_POP(scopes);
             continue;
         }
 
         DA_PUSH(*esp, n);
     }
+
+    DA_FREE(scopes);
     return *esp;
 }
 

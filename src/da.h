@@ -88,3 +88,10 @@ do { \
 #define DA_GET(da, index) ((da).items[index])
 
 #define DA_GET_LAST(da) ((da).items[(da).count -1])
+
+#define DA_FREE(da) \
+do { \
+    if((da).items != NULL){ \
+        free((da).items); \
+    } \
+} while(0)
