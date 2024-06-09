@@ -14,6 +14,7 @@ typedef enum {
     TYPE_INT,
     TYPE_BOOL,
     TYPE_STRING,
+    TYPE_UNDEFINED,
 } VariantType;
 
 typedef struct {
@@ -68,23 +69,24 @@ char* variant_to_string(const Variant* v){
         case TYPE_NULL:
             sprintf(str, "null");
             break;
+        case TYPE_UNDEFINED:
+            sprintf(str, "undefined");
+        break;
     }
     return strdup(str);
 }
 
-// char* variant_to_printf_string(const Variant* v){
-//     char *s = variant_to_string(v);
-//     if(v->type == TYPE_STRING){
-//         size_t len = strlen(s)+3;
-//         char temp[len];
-//         memset(&temp, 0, len);
-//         // printf("p: %s\n", s);
-//         sprintf(&temp, "'%s'", s);
-//         free(s);
-//         return strdup(temp);
-//     }
-//     return s;
-// }
+char* variant_to_printf_string(const Variant* v){
+    char *s = variant_to_string(v);
+    if(v->type == TYPE_STRING){
+        size_t len = strlen(s)+3;
+        char* temp = malloc(sizeof(char)*len);
+        memset(temp, 0, sizeof(char)*len);
+        sprintf(temp, "\"%s\"", s);
+        return temp;
+    }
+    return s;
+}
 
 Variant variant_add(Variant a, Variant b){
     if(a.type != b.type) {
@@ -192,7 +194,7 @@ bool variant_is_truthy(const Variant a){
         case TYPE_NULL:
             ret = !a.null_value; // null is always falsy
             break;
-        default: 
+        default:
             CTACK_ERROR("[TRUTHY OPERATOR] Not implemented yet!\n");
             exit(1);
     }
@@ -204,7 +206,7 @@ bool variant_and(const Variant a, const Variant b){
         CTACK_ERROR("[LOGIC OPERATOR] Can not use && operator with %s and %s!\n", variant_to_string(&a), variant_to_string(&b));
         exit(1);
     }
-    return variant_is_truthy(a) && variant_is_truthy(b); 
+    return variant_is_truthy(a) && variant_is_truthy(b);
 }
 bool variant_or(const Variant a, const Variant b){
     if(a.type != b.type){
@@ -212,7 +214,7 @@ bool variant_or(const Variant a, const Variant b){
         exit(1);
     }
 
-    return variant_is_truthy(a) || variant_is_truthy(b); 
+    return variant_is_truthy(a) || variant_is_truthy(b);
 }
 bool variant_gt(const Variant a, const Variant b){
     if(a.type != b.type){

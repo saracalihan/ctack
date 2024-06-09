@@ -57,7 +57,7 @@ stack_type stack_get(const Stack *s, size_t index){
         CTACK_ERROR("Stack is empty!");
         exit(-1);
     }
-    if(index < 0 || index > s->top){
+    if(index > (size_t)s->top){
         CTACK_ERROR("Stack out of range! Stack size is %d given index is %zu.\n", s->top +1, index);
         exit(-1);
     }

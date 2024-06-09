@@ -13,6 +13,7 @@ A stack based language which developt with c.
 - [Data Types](#data-types)
 - [Keywords](#keywords)
   - [Stack Manipulation](#stack-manipulation)
+  - [Memory Manipulation](#memory-manipulation)
   - [Arithmetics](#arithmetics)
   - [Logical and Comparison](#logical-and-comparison)
   - [Loops and Statements](#loops-and-statements)
@@ -50,6 +51,15 @@ ctack main.ctk
 | pop     | Removes the top value from the stack | `pop`             |
 | peek    | Peeks at the top value without popping it | `peek`         |
 | pick    | Get element from stack with index | `pick 2`         |
+
+### Memory Manipulation
+
+| Keyword | Description                              | Usage                |
+|---------|------------------------------------------|----------------------|
+| var     | Declares a new variable                  | `var x`              |
+| store   | Stores the top stack value into a variable | `store x`            |
+| load    | Loads the value of a variable onto the stack | `load x`            |
+| delete  | Deletes a variable                       | `delete x`           |
 
 ### Arithmetics
 

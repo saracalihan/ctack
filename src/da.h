@@ -18,13 +18,12 @@ do{ \
 
 #define DA_EXPAND(da, time) \
 do { \
-    if ((da).count >= (da).capacity) { \
-        (da).capacity = (da).capacity == 0 ? 1 : (da).capacity*(time); \
-        (da).items = realloc((da).items, (da).capacity * sizeof(*(da).items)); \
-        if (!(da).items) { \
-            printf("Memory allocation failed\n"); \
-            exit(EXIT_FAILURE); \
-        } \
+    (da).capacity = (da).capacity == 0 ? 1 : (da).capacity*(time); \
+    (da).items = realloc((da).items, (da).capacity * sizeof(*(da).items)); \
+    memset(&(da).items[(da).count], 0, sizeof(*(da).items) * ((da).capacity - (da). count)); \
+    if (!(da).items) { \
+        printf("Memory allocation failed\n"); \
+        exit(EXIT_FAILURE); \
     } \
 } while(0);
 

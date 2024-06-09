@@ -2,13 +2,16 @@ push 10
 "alihan"
 true
 null
--1
+1
 false
 ==
 if
-  "-1 is eq to false"
+  "1 is eq to false"
 else
-  "not eq"
+  "1 is not eq to false"
 end
-print 
+print
+var is_equal
+store is_equal 
+pop
 dump
