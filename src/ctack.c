@@ -7,6 +7,7 @@
 #include "tokenizer.h"
 #include "parser.h"
 #include "interpretter.h"
+#include "variable.h"
 
 
 int main( int argc, char** argv){
@@ -36,6 +37,8 @@ int main( int argc, char** argv){
     ExecutationStack es = parse(&tokens);
     tokens_free(&tokens);
     Stack stack = stack_create();
+
+    es.variable_table = variable_create_hashtable(1);
     int res = interpret(&es, &stack);
     executation_stack_free(&es);
     return 0;

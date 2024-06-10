@@ -106,15 +106,26 @@ Token token_create(const char* str){
         token.type = TOKEN_ELSE;
     }else if (strncmp(str, "end", 3) == 0) {
         token.type = TOKEN_END;
-    } else {
+    } else if (strncmp(str, "var", 3) == 0) {
+        token.type = TOKEN_VAR;
+    } else if (strncmp(str, "store", 5) == 0) {
+        token.type = TOKEN_STORE;
+    } else if (strncmp(str, "load", 4) == 0) {
+        token.type = TOKEN_LOAD;
+    } else if (strncmp(str, "delete", 6) == 0) {
+        token.type = TOKEN_DELETE;
+    }else {
         if(!( // check data types
             is_integer(str) ||
             is_string(str)  ||
             is_boolean(str) ||
             is_null(str)
         )){
-            CTACK_ERROR("[TOKENIZER ERROR] Invalid data value: '%s'\n", str);
-            exit(1);
+            token.type = TOKEN_VARIABLE_NAME;
+            strcpy(token.value, str);
+            return token;
+            // CTACK_ERROR("[TOKENIZER ERROR] Invalid data value: '%s'\n", str);
+            // exit(1);
         }
         token.type = TOKEN_DATA;
         sprintf(token.value, "%s", str);

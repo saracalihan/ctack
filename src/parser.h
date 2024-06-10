@@ -23,11 +23,17 @@ void executation_stack_free(ExecutationStack* es){
             && 
             (
                 es->items[i].type != NODE_ARITHMETIC_OPS &&
-                es->items[i].type != NODE_LOGIC_OPS
+                es->items[i].type != NODE_LOGIC_OPS && 
+                es->items[i].type != NODE_VARIABLE_OPS
             )
         ){
             free(es->items[i].data);
         }
+
+        if(es->items[i].type != NODE_VARIABLE_OPS){
+            // SİLLLL *******************
+        }
+
     }
     free(es->items);
 }
@@ -174,6 +180,58 @@ ExecutationStack parse(Tokens* tokens){
             case TOKEN_END:
                 esp = DA_POP(scopes);
             continue;
+            case TOKEN_VAR:
+                {
+                    Token next_token = DA_SHIFT(*tokens);
+                    if(next_token.type != TOKEN_VARIABLE_NAME){
+                        printf("[PARSE ERROR] Can not create variable without name!\n");
+                        exit(1);
+                    }
+                    n = node_create(NODE_VARIABLE_OPS);
+                    n.type = NODE_VARIABLE_OPS;
+                    n.variable_ops.type = VARIABLE_DECLARATION;
+                    strcpy(n.variable_ops.name, next_token.value);
+                }
+            break;
+            case TOKEN_LOAD:
+                {
+                    Token next_token = DA_SHIFT(*tokens);
+                    if(next_token.type != TOKEN_VARIABLE_NAME){
+                        printf("[PARSE ERROR] Can not load variable without name!\n");
+                        exit(1);
+                    }
+                    n = node_create(NODE_VARIABLE_OPS);
+                    n.type = NODE_VARIABLE_OPS;
+                    n.variable_ops.type = VARIABLE_LOAD;
+                    strcpy(n.variable_ops.name, next_token.value);
+                }
+            break;
+            case TOKEN_STORE:
+                {
+                    Token next_token = DA_SHIFT(*tokens);
+                    if(next_token.type != TOKEN_VARIABLE_NAME){
+                        printf("[PARSE ERROR] Can not store variable without name!\n");
+                        exit(1);
+                    }
+                    n = node_create(NODE_VARIABLE_OPS);
+                    n.type = NODE_VARIABLE_OPS;
+                    n.variable_ops.type = VARIABLE_STORE;
+                    strcpy(n.variable_ops.name, next_token.value);
+                }
+            break;
+            case TOKEN_DELETE:
+                {
+                    Token next_token = DA_SHIFT(*tokens);
+                    if(next_token.type != TOKEN_VARIABLE_NAME){
+                        printf("[PARSE ERROR] Can not delete variable without name!\n");
+                        exit(1);
+                    }
+                    n = node_create(NODE_VARIABLE_OPS);
+                    n.type = NODE_VARIABLE_OPS;
+                    n.variable_ops.type = VARIABLE_DELETE;
+                    strcpy(n.variable_ops.name, next_token.value);
+                }
+            break;
         }
 
         DA_PUSH(*esp, n);

@@ -2,11 +2,13 @@
 #define STACK_SIZE 10
 #define STACK_ERROR printf
 #define STACK_SIZE 10
+#define VARIABLE_NAME_SIZE 64
 
 #ifndef COMMON_H
 #define COMMON_H
 
 #include "variant.h"
+#include "variable.h"
 
 typedef Variant stack_type;
 
@@ -35,6 +37,11 @@ typedef enum {
     TOKEN_IF,
     TOKEN_ELSE,
     TOKEN_END,
+    TOKEN_VARIABLE_NAME,
+    TOKEN_VAR,
+    TOKEN_STORE,
+    TOKEN_LOAD,
+    TOKEN_DELETE,
 } TokenTypes;
 
 typedef struct {
@@ -56,6 +63,7 @@ typedef struct ExecutationStack {
     size_t count;
     size_t capacity;
     size_t top;
+    VariableHashTable variable_table;
 } ExecutationStack;
 
 typedef enum {
@@ -69,7 +77,15 @@ typedef enum {
     NODE_ARITHMETIC_OPS,
     NODE_LOGIC_OPS,
     NODE_IF_STMT,
+    NODE_VARIABLE_OPS,
 } NodeType;
+
+typedef enum{
+    VARIABLE_DECLARATION,
+    VARIABLE_LOAD,
+    VARIABLE_STORE,
+    VARIABLE_DELETE,
+} VariableOperationType;
 
 struct Node {
     NodeType type;
@@ -79,6 +95,10 @@ struct Node {
             ExecutationStack consequent;
             ExecutationStack alternate;
         } if_statement;
+        struct {
+            VariableOperationType type;
+            char name[VARIABLE_NAME_SIZE];
+        } variable_ops;
     };
 };
 

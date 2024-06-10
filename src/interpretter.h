@@ -1,8 +1,47 @@
 #include "common.h"
 #include "stack.h"
 #include "variant.h"
+#include "da.h"
 
 typedef bool (*LOGICAL_FUNC_TWO_PARAMATER)(Variant, Variant);
+
+typedef struct{
+    char* name;
+    Variant value;
+}NameAndValue;
+
+typedef struct {
+    NameAndValue* items;
+    size_t count;
+    size_t capacity;
+} VariableNames;
+
+VariableNames get_variable_names(ExecutationStack* es){
+    VariableNames names ={0};
+    DA_INIT(names,1);
+    for(int i=0; i< es->variable_table.count; i++){
+        VariableHashTableNode itr=DA_GET(es->variable_table, i);
+
+        if(itr.variable.key[0]!='\0'){ // reassign value
+            NameAndValue nv = {
+                .name = itr.variable.key,
+                .value = itr.variable.value,
+            };
+            DA_PUSH(
+                names,
+                nv
+            );
+
+            for(size_t j=0; j<itr.nexts.count; j++){ // reassign nexts
+                nv.name = itr.nexts.items[j].key;
+                nv.value = itr.nexts.items[j].value;
+
+                DA_PUSH(names, nv);
+            }
+        }
+    }
+    return names;
+}
 
 int interpret(ExecutationStack* es, Stack* stack){
     if(es->count == 0){
@@ -61,12 +100,25 @@ int interpret(ExecutationStack* es, Stack* stack){
                 }
                 break;
             case NODE_DUMP:
-                printf("Stack(%i):\n", stack->top +1 );
+            {
+                VariableNames variable_names =get_variable_names(es);
+
+                printf("Variables(%li):\n", variable_names.count);
+                Variable* var;
+                for(size_t i=0;i< variable_names.count; i++){
+                    var = variable_hashtable_get(&es->variable_table, DA_GET(variable_names, i).name);
+                    char* value_str = variant_to_printf_string(&var->value);
+                    printf("  %s = %s\n", var->key, value_str);
+                    // free(value_str);
+                }
+
+                printf("Stack(%i):\n  ", stack->top +1 );
                 for(int i=0;i<= stack->top; i++){
-                    printf("| %s ", variant_to_string(&stack->items[i]));
+                    printf("| %s ", variant_to_printf_string(&stack->items[i]));
                 }
                 printf("\n");
                 break;
+            }
             case NODE_IF_STMT:
                 stack_type data = stack_pop(stack);
                 interpret(
@@ -76,6 +128,41 @@ int interpret(ExecutationStack* es, Stack* stack){
                     ,stack
                 );
             break;
+            case NODE_VARIABLE_OPS:
+                switch (node->variable_ops.type){
+
+                    case VARIABLE_DECLARATION:
+                        size_t hash = variable_hashtable_add(
+                            &es->variable_table,
+                            node->variable_ops.name,
+                            (Variant){
+                                .type = TYPE_UNDEFINED,
+                        });
+                    break;
+                    case VARIABLE_STORE:
+                        variable_hashtable_set(
+                            &es->variable_table,
+                            node->variable_ops.name,
+                            stack_peek(stack)
+                        );
+                    break;
+                    case VARIABLE_LOAD:
+                    {
+                        Variable* var = variable_hashtable_get(
+                            &es->variable_table,
+                            node->variable_ops.name
+                        );
+                        stack_push(stack, var->value);
+                    }
+                    break;
+                    case VARIABLE_DELETE:
+                        variable_hashtable_delete(
+                            &es->variable_table,
+                            node->variable_ops.name
+                        );
+                    break;
+                }
+                break;
         }
         es->top++;
     }
