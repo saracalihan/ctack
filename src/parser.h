@@ -157,6 +157,9 @@ ExecutationStack parse(Tokens* tokens){
             case TOKEN_PRINT:
                 n = node_create(NODE_PRINT);
             break;
+            case TOKEN_PRINTLN:
+                n = node_create(NODE_PRINTLN);
+            break;
             case TOKEN_DUMP:
                 n = node_create(NODE_DUMP);
             break;

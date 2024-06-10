@@ -96,6 +96,12 @@ int interpret(ExecutationStack* es, Stack* stack){
             case NODE_PRINT:
                 {
                     stack_type data = stack_peek(stack);
+                    printf(variant_to_string(&data));
+                }
+                break;
+            case NODE_PRINTLN:
+                {
+                    stack_type data = stack_peek(stack);
                     printf("%s\n", variant_to_string(&data));
                 }
                 break;
