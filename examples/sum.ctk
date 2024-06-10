@@ -1,22 +1,23 @@
+// variables declaration
 var a
 var b
 var result
 
+// set variables
 5
 store a
 10
 store b
 
+// calculate sum
 +
 
 store result
 
+// print sum
 print
 
-10
->
-
-if
+10 > if
     "Result is greater than 10"
 else
     "Result is not greater than 10"

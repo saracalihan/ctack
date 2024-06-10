@@ -144,6 +144,13 @@ Tokens tokenize_string(const char* code){
             while (*p && isspace(*p)) {
                 p++;
             }
+            if(strncmp(p, "//", 2) == 0){ // skip comment
+                while(*p != '\n'){
+                    p++;
+                }
+                p++;
+                continue;
+            }
         }
 
         if (*p) {
