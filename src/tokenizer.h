@@ -72,7 +72,7 @@ Token token_create(const char* str){
         token.type = TOKEN_PICK;
     } else if (strncmp(str, "+", 1) == 0) {
         token.type = TOKEN_ADD;
-    } else if (strncmp(str, "-", 1) == 0) {
+    } else if (strncmp(str, "-", 1) == 0 && !is_integer(str)) {
         token.type = TOKEN_SUB;
     } else if (strncmp(str, "print", 5) == 0) {
         token.type = TOKEN_PRINT;
