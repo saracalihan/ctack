@@ -1,6 +1,11 @@
 push 10
 "alihan"
 true
+var a
+var b
+var c
+var result
+
 null
 1
 false

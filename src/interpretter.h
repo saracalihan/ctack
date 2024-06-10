@@ -19,12 +19,12 @@ typedef struct {
 VariableNames get_variable_names(ExecutationStack* es){
     VariableNames names ={0};
     DA_INIT(names,1);
-    for(int i=0; i< es->variable_table.count; i++){
+    for(int i=0; i< es->variable_table.capacity; i++){
         VariableHashTableNode itr=DA_GET(es->variable_table, i);
 
-        if(itr.variable.key[0]!='\0'){ // reassign value
+        if(itr.variable.key[0] !='\0'){
             NameAndValue nv = {
-                .name = itr.variable.key,
+                .name = strdup(itr.variable.key),
                 .value = itr.variable.value,
             };
             DA_PUSH(
@@ -32,8 +32,8 @@ VariableNames get_variable_names(ExecutationStack* es){
                 nv
             );
 
-            for(size_t j=0; j<itr.nexts.count; j++){ // reassign nexts
-                nv.name = itr.nexts.items[j].key;
+            for(size_t j=0; j<itr.nexts.count; j++){
+                nv.name = strdup(itr.nexts.items[j].key);
                 nv.value = itr.nexts.items[j].value;
 
                 DA_PUSH(names, nv);
@@ -104,12 +104,11 @@ int interpret(ExecutationStack* es, Stack* stack){
                 VariableNames variable_names =get_variable_names(es);
 
                 printf("Variables(%li):\n", variable_names.count);
-                Variable* var;
+                NameAndValue var;
                 for(size_t i=0;i< variable_names.count; i++){
-                    var = variable_hashtable_get(&es->variable_table, DA_GET(variable_names, i).name);
-                    char* value_str = variant_to_printf_string(&var->value);
-                    printf("  %s = %s\n", var->key, value_str);
-                    // free(value_str);
+                    var = DA_GET(variable_names, i);
+                    char* value_str = variant_to_printf_string(&var.value);
+                    printf("  %s = %s\n", var.name, value_str);
                 }
 
                 printf("Stack(%i):\n  ", stack->top +1 );

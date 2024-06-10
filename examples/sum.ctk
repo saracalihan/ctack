@@ -1,0 +1,26 @@
+var a
+var b
+var result
+
+5
+store a
+10
+store b
+
++
+
+store result
+
+print
+
+10
+>
+
+if
+    "Result is greater than 10"
+else
+    "Result is not greater than 10"
+end
+print
+
+dump

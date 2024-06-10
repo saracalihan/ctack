@@ -4,4 +4,4 @@ all: compile run
 compile: src/ctack.c
 	cc -o build/ctack ${FLAGS} src/ctack.c
 run: build/ctack
-	./build/ctack main.ctk
+	./build/ctack examples/sum.ctk
