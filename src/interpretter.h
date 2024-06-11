@@ -168,6 +168,16 @@ int interpret(ExecutationStack* es, Stack* stack){
                     break;
                 }
                 break;
+            case NODE_EXIT:
+                {
+                    Variant ret_val = stack_pop(stack);
+                    bool is_int = ret_val.type == TYPE_INT;
+                    if(!is_int){
+                        CTACK_ERROR("[EXIT ERROR] Invalid exit code!\n");
+                    }
+                    exit(is_int ? ret_val.int_value : -1);
+                }
+            break;
         }
         es->top++;
     }

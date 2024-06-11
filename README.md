@@ -105,6 +105,7 @@ ctack main.ctk
 | Keyword | Description                          | Usage             |
 |---------|--------------------------------------|-------------------|
 | `//`   | Characters after `//` characters until the new line are ignored are ignored  | `var name  // This is user name`     |
+| exit   | Exit the program with a status code  | `-1 exit`     |
 
 
 ## Contributing

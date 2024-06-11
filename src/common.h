@@ -43,6 +43,7 @@ typedef enum {
     TOKEN_STORE,
     TOKEN_LOAD,
     TOKEN_DELETE,
+    TOKEN_EXIT,
 } TokenTypes;
 
 typedef struct {
@@ -80,6 +81,7 @@ typedef enum {
     NODE_LOGIC_OPS,
     NODE_IF_STMT,
     NODE_VARIABLE_OPS,
+    NODE_EXIT,
 } NodeType;
 
 typedef enum{

@@ -116,6 +116,8 @@ Token token_create(const char* str){
         token.type = TOKEN_LOAD;
     } else if (strncmp(str, "delete", 6) == 0) {
         token.type = TOKEN_DELETE;
+    } else if (strncmp(str, "exit", 4) == 0) {
+        token.type = TOKEN_EXIT;
     }else {
         if(!( // check data types
             is_integer(str) ||

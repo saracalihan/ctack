@@ -235,6 +235,9 @@ ExecutationStack parse(Tokens* tokens){
                     strcpy(n.variable_ops.name, next_token.value);
                 }
             break;
+            case TOKEN_EXIT:
+                n.type = NODE_EXIT;
+            break;
         }
 
         DA_PUSH(*esp, n);
