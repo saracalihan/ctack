@@ -23,6 +23,7 @@ typedef enum {
     TOKEN_DIV,
     TOKEN_MULT,
     TOKEN_PRINT,
+    TOKEN_PRINTLN,
     TOKEN_DUMP,
     TOKEN_DATA,
     TOKEN_LOGIC_AND,
@@ -42,6 +43,7 @@ typedef enum {
     TOKEN_STORE,
     TOKEN_LOAD,
     TOKEN_DELETE,
+    TOKEN_EXIT,
 } TokenTypes;
 
 typedef struct {
@@ -73,11 +75,13 @@ typedef enum {
     NODE_PEEK,
     NODE_PICK,
     NODE_PRINT,
+    NODE_PRINTLN,
     NODE_DUMP,
     NODE_ARITHMETIC_OPS,
     NODE_LOGIC_OPS,
     NODE_IF_STMT,
     NODE_VARIABLE_OPS,
+    NODE_EXIT,
 } NodeType;
 
 typedef enum{

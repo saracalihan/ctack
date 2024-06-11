@@ -74,6 +74,8 @@ Token token_create(const char* str){
         token.type = TOKEN_ADD;
     } else if (strncmp(str, "-", 1) == 0 && !is_integer(str)) {
         token.type = TOKEN_SUB;
+    } else if (strncmp(str, "println", 7) == 0) {
+        token.type = TOKEN_PRINTLN;
     } else if (strncmp(str, "print", 5) == 0) {
         token.type = TOKEN_PRINT;
     } else if (strncmp(str, "/", 1) == 0) {
@@ -114,6 +116,8 @@ Token token_create(const char* str){
         token.type = TOKEN_LOAD;
     } else if (strncmp(str, "delete", 6) == 0) {
         token.type = TOKEN_DELETE;
+    } else if (strncmp(str, "exit", 4) == 0) {
+        token.type = TOKEN_EXIT;
     }else {
         if(!( // check data types
             is_integer(str) ||
@@ -143,6 +147,13 @@ Tokens tokenize_string(const char* code){
         if (!is_string) {
             while (*p && isspace(*p)) {
                 p++;
+            }
+            if(strncmp(p, "//", 2) == 0){ // skip comment
+                while(*p != '\n'){
+                    p++;
+                }
+                p++;
+                continue;
             }
         }
 

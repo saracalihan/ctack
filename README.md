@@ -18,6 +18,7 @@ A stack based language which developt with c.
   - [Logical and Comparison](#logical-and-comparison)
   - [Loops and Statements](#loops-and-statements)
   - [IO](#io)
+  - [Others](#others)
 - [structure of project](#structure-of-project)
 - [contributing](#contributing)
 - [license](#license)
@@ -98,6 +99,14 @@ ctack main.ctk
 |---------|--------------------------------------|-------------------|
 | print   | Prints the top value on the stack to the console | `print`     |
 | dump    | Dumps all stack contents to the console for debugging | `dump`   |
+
+### Others
+
+| Keyword | Description                          | Usage             |
+|---------|--------------------------------------|-------------------|
+| `//`   | Characters after `//` characters until the new line are ignored are ignored  | `var name  // This is user name`     |
+| exit   | Exit the program with a status code  | `-1 exit`     |
+
 
 ## Contributing
 

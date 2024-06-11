@@ -58,6 +58,19 @@ char* variant_to_string(const Variant* v){
 
     switch (v->type){
         case TYPE_STRING:
+            char *p = v->string_value;
+            while(p){
+                if(*p == '\0'){
+                    break;
+                }
+                // convert newline to real newline
+                if(strncmp(p, "\\n", 2) ==0){
+                    *p = '\n';
+                    memcpy(++p,  p+2, strlen(p -2));
+                    p +=2;
+                }
+                p++;
+            }
             return v->string_value;
         break;
         case TYPE_BOOL:
